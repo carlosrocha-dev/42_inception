@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+.header {
+  position: relative;
+  background-image: url('/images/captain.png');
+  background-size: cover;
+  background-position: right;
+  height: 800px;
+  color: white;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.header-content {
+  max-width: 600px;
+}
+
+.header-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+.header-subtitle {
+  margin-bottom: 1.5rem;
+  text-align: justify;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-explore, .btn-watch {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: red;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-explore:hover, .btn-watch:hover {
+  background-color: darkred;
+}

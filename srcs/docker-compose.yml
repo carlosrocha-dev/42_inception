@@ -1,0 +1,94 @@
+# version: '3.8'
+
+networks:
+  wp-inception:
+    name: wp-inception
+    driver: bridge
+
+volumes:
+  mariadb:
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/user42/data/mariadb
+  wordpress:
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/user42/data/wordpress
+  static-files:
+    driver_opts:
+      type: none
+      device: /home/user42/data/static-files
+      o: bind
+
+services:
+  mariadb:
+    init: true
+    container_name: mariadb
+    build:
+      context: ./requirements/mariadb
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 3306:3306
+    networks:
+      - wp-inception
+    volumes:
+      - mariadb:/var/lib/mysql
+
+  wordpress:
+    init: true
+    container_name: wordpress
+    build:
+      context: ./requirements/wordpress
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - wp-inception
+    volumes:
+      - wordpress:/var/www/html
+    depends_on:
+      - mariadb
+
+  nginx:
+    init: true
+    container_name: nginx
+    build:
+      context: ./requirements/nginx
+    restart: always
+    networks:
+      - wp-inception
+    ports:
+      - 443:443
+    env_file:
+      - .env
+    volumes:
+      - wordpress:/var/www/html
+    depends_on:
+      - wordpress
+
+  redis:
+    build: ./requirements/bonus/redis
+    container_name: redis
+    networks:
+      - wp-inception
+    restart: always
+    depends_on:
+      - wordpress
+
+  static:
+    init: true
+    container_name: static
+    build:
+      context: ./requirements/bonus/static/
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - wp-inception
+    volumes:
+      - static-files:/app/build
+    ports:
+      - "3000:3000"
